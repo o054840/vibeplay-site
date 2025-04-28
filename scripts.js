@@ -8,10 +8,10 @@ function displaySongs(filter = '') {
         (song.title + song.artist).includes(filter)
     ).forEach(song => {
         const div = document.createElement('div');
-        div.className = 'song';
+        div.className = 'song-card';
         div.innerHTML = `
-            <h2>${song.title} - ${song.artist}</h2>
-            <iframe src="https://www.youtube.com/embed/${song.youtubeId}" allowfullscreen></iframe>
+            <h2>${song.title}</h2>
+            ${song.youtubeId ? `<iframe src="https://www.youtube.com/embed/${song.youtubeId}" allowfullscreen></iframe>` : '<p>לא נמצא וידאו</p>'}
         `;
         container.appendChild(div);
     });
@@ -21,7 +21,6 @@ document.getElementById('search').addEventListener('input', (e) => {
     displaySongs(e.target.value);
 });
 
-// קריאה לטעינת שירים מה-crawler
 document.addEventListener('DOMContentLoaded', () => {
     fetchSongs();
 });
