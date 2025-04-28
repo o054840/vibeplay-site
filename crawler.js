@@ -1,25 +1,42 @@
 async function fetchSongs() {
-    // סימולציה של משיכת נתונים מאתרי מוזיקה (המחדש וחסידי ניוז)
-    const fetchedSongs = [
-        { title: "שיר 1", artist: "זמר 1" },
-        { title: "שיר 2", artist: "זמר 2" },
-        { title: "שיר 3", artist: "זמר 3" }
-    ];
+    try {
+        const response = await fetch('https://hm-news.co.il/audio-and-video/');
+        const text = await response.text();
+        const parser = new DOMParser();
+        const doc = parser.parseFromString(text, 'text/html');
 
-    songs = [];
+        const posts = doc.querySelectorAll('.jeg_post_title a');
+        songs = [];
 
-    for (const song of fetchedSongs) {
-        const youtubeId = await searchYouTube(song.title + ' ' + song.artist);
+        posts.forEach(post => {
+            const title = post.innerText.trim();
+            if (title) {
+                songs.push({
+                    title: title,
+                    artist: "לא ידוע כרגע", // אפשר לשפר בניתוח יותר מתקדם
+                    youtubeId: null
+                });
+            }
+        });
+
+        await searchAllOnYouTube();
+        displaySongs();
+    } catch (error) {
+        console.error('בעיה בטעינת שירים', error);
+    }
+}
+
+async function searchAllOnYouTube() {
+    for (let i = 0; i < songs.length; i++) {
+        const youtubeId = await searchYouTube(songs[i].title);
         if (youtubeId) {
-            songs.push({ ...song, youtubeId });
+            songs[i].youtubeId = youtubeId;
         }
     }
-
-    displaySongs();
 }
 
 async function searchYouTube(query) {
-    // פונקציה מדומה – צריך להכניס כאן קריאה אמיתית ל-YouTube API
-    // כרגע מדמה החזרה של תוצאה מזויפת
-    return "dQw4w9WgXcQ"; // יוחלף בעתיד באיידי האמיתי של יוטיוב
+    // כאן תצטרך API מפתח אמיתי של יוטיוב
+    // כרגע סימולציה
+    return "dQw4w9WgXcQ"; 
 }
