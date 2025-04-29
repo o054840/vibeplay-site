@@ -13,7 +13,7 @@ async function fetchSongs() {
             if (title) {
                 songs.push({
                     title: title,
-                    artist: "לא ידוע כרגע", // אפשר לשפר בניתוח יותר מתקדם
+                    artist: "זמר לא ידוע", 
                     youtubeId: null
                 });
             }
@@ -36,7 +36,11 @@ async function searchAllOnYouTube() {
 }
 
 async function searchYouTube(query) {
-    // כאן תצטרך API מפתח אמיתי של יוטיוב
-    // כרגע סימולציה
-    return "dQw4w9WgXcQ"; 
+    const apiKey = 'AIzaSyAsY66eCS3pZ7tyh8a-JCT8my0SgVtFAak';
+    const response = await fetch(`https://www.googleapis.com/youtube/v3/search?part=snippet&type=video&maxResults=1&q=${encodeURIComponent(query)}&key=${apiKey}`);
+    const data = await response.json();
+    if (data.items && data.items.length > 0) {
+        return data.items[0].id.videoId;
+    }
+    return null;
 }
