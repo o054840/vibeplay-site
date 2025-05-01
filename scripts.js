@@ -1,30 +1,18 @@
-let songs = [];
-
 async function loadSongs() {
-    const titles = await getCombinedSongs();
-    for (let title of titles) {
-        const youtubeId = await searchYouTube(title);
-        if (youtubeId) {
-            songs.push({ title, youtubeId });
-        }
-    }
-    displaySongs();
-}
-
-function displaySongs() {
+    const songs = await getCombinedSongs();
     const container = document.getElementById('songs-container');
     container.innerHTML = '';
+
     songs.forEach(song => {
-        const div = document.createElement('div');
-        div.className = 'song-card';
-        div.innerHTML = `
-            <h2>${song.title}</h2>
-            <iframe src="https://www.youtube.com/embed/${song.youtubeId}" allowfullscreen></iframe>
-        `;
-        container.appendChild(div);
+        const videoId = song.videoId || song.youtubeId;
+        if (videoId) {
+            const div = document.createElement('div');
+            div.className = 'song-card';
+            div.innerHTML = `
+                <h3>${song.title}</h3>
+                <iframe src="https://www.youtube.com/embed/${videoId}" allowfullscreen></iframe>
+            `;
+            container.appendChild(div);
+        }
     });
 }
-
-document.addEventListener('DOMContentLoaded', () => {
-    loadSongs();
-});
