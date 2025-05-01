@@ -1,3 +1,11 @@
+function showPopup(message) {
+    const popup = document.getElementById('popup');
+    popup.innerText = message;
+    popup.style.display = 'block';
+    setTimeout(() => {
+        popup.style.display = 'none';
+    }, 5000);
+}
 async function loadSongs() {
     const songs = await getCombinedSongs();
     const container = document.getElementById('songs-container');
